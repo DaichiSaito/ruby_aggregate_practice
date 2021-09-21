@@ -7,12 +7,9 @@ class HighMotivationUserAggregator
     @channel_names = channel_names
   end
 
-  # 実装してください
   def exec
-    #各チャンネルのハッシュから、keyが“messages”のvalueの配列を取ってきて、その要素数を出す
-    message_count = channel_names.map{|channel_name| {:channel_name => channel_name, :message_count => load(channel_name)["messages"].length}}
-    
-    #メッセージの数の降順で並び替え、数が多い3つのチャンネルを抽出する。
+    message_count = channel_names.map { |channel_name| { :channel_name => channel_name, :message_count => load(channel_name)["messages"].length } }
+
     desc = message_count.sort_by! { |a| a[:message_count] }.reverse!
     desc.first(3)
   end
