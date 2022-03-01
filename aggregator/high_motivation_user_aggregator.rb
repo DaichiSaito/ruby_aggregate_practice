@@ -13,8 +13,8 @@ class HighMotivationUserAggregator
       data = load(channel_name)["messages"]
       [channel_name, data.length]
     }
-    targets = msg_count.sort{|a, b| b[1] <=> a[1]}[0..2]
-    targets.map{|target| {:channel_name => target[0], :message_count => target[1]}}
+    sorted_targets = msg_count.sort{|a, b| b[1] <=> a[1]}[0..2]
+    sorted_targets.map{|target| {:channel_name => target[0], :message_count => target[1]}}
   end
 
   def load(channel_name)
