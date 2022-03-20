@@ -9,14 +9,13 @@ class HighMotivationUserAggregator
 
   # 実装してください
   def exec
-    message_count = channel_names.map{
-      |channel_name| {
-        :channel_name => channel_name,
-        :message_count => load(channel_name)["messages"].length
+    channel_bestsort = channel_names.map do |channel_name|
+      {
+        channel_name: channel_name,
+        message_count: load(channel_name)['messages'].length
       }
-    }
-    desc = message_count.sort_by! { |a| a[:message_count] }.reverse!
-    desc.first(3)
+    end
+    channel_bestsort.max_by(3) { |max| max[:message_count] }
   end
 
   def load(channel_name)

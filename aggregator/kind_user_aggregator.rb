@@ -9,16 +9,15 @@ class KindUserAggregator
 
   # 実装してください
   def exec
-    message_ary = channel_names.map { |channel_name| load(channel_name)["messages"] }.flatten
+    message_ary = channel_names.map { |channel_name| load(channel_name)['messages'] }.flatten
 
-    reaction_ary = message_ary.map{|message| message["reactions"] }.compact.flatten
+    reaction_ary = message_ary.map { |message| message['reactions'] }.compact.flatten
 
-    user_ary = reaction_ary.map{|reaction| reaction["users"] }.compact.flatten
+    user_ary = reaction_ary.map { |reaction| reaction['users'] }.compact.flatten
 
-    user_count = user_ary.uniq.map{|u|{:user_id =>u, :reaction_count => user_ary.count(u)}}
+    user_count = user_ary.uniq.map { |u| { user_id: u, reaction_count: user_ary.count(u) } }
 
-    desc = user_count.sort_by! { |i| i[:reaction_count] }.reverse!
-    desc.first(3)
+    user_count.max_by(3) { |max| max[:reaction_count] }
   end
 
   def load(channel_name)
