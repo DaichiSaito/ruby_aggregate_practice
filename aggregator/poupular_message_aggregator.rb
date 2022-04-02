@@ -7,8 +7,18 @@ class PopularMessageAggregator
 
   # 実装してください
   def exec
-    # dummy
-    
+    result = Hash.new(0)
+    @channel_names.each do |name|
+      load(name)['messages'].each do |element|
+        next unless element['reactions']
+        count = element['reactions'].map{|re| re['users'].count}.sum
+        if count > result[:reaction_count]
+          result[:text] = element['text']
+          result[:reaction_count] = count
+        end
+      end
+    end
+    result
   end
 
   def load(channel_name)
