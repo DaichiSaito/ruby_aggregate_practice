@@ -9,20 +9,20 @@ class KindUserAggregator
 
   # 実装してください
   def exec
-
-    results = Hash.new(0)
+    results = []
+    users = []
     @channel_names.each do |name|
       load(name)['messages'].each do |element|
-        next unless element['reactions']
-        users = element['reactions'].first['users']
-        users.each do |user|
-          user_sym = user.to_sym
-          results[user_sym] += 1
-        end
+        reactions = element['reactions']
+        next unless reactions
+        users << reactions.map{|re| re['users']}
+        users.flatten!
       end
     end
-    # 出力データのフォーマットを合わせるために配列に変更
-    results = results.sort_by{|_,v| v}.reverse.take(3).map{|data| {user_id: data[0], reaction_count: data[1]}}
+    users.uniq.each do |user|
+      results << {user_id: user, reaction_count: users.count(user)}
+    end
+    results.sort_by{|re| re[:reaction_count]}.reverse.take(3)
   end
 
   def load(channel_name)
