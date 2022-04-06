@@ -7,7 +7,7 @@ class PopularMessageAggregator
 
   # 実装してください
   def exec
-    result = Hash.new(0)
+    result = {text: '', reaction_count: 0}
     @channel_names.each do |name|
       load(name)['messages'].each do |element|
         next unless element['reactions']
